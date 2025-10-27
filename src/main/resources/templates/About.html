@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+        lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>BeerTag | About</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<!-- The header and footer section are the same in each page -->
+<header>
+    <div>
+        <h3>
+            <a th:href="@{/}">Home</a>
+            | <a th:href="@{/beers}">Beers</a>
+            | <a th:href="@{/about}">About</a>
+        </h3>
+    </div>
+</header>
+
+<div class="body-content">
+    <h2>About the project</h2>
+    <p>
+        <b>BeerTag</b> is a social network for sharing experience about drinking beer, mainly craft ones.
+    </p>
+</div>
+
+<footer>
+    <small>©️ Copyright 2024, BeerTag</small>
+</footer>
+</body>
+</html>
