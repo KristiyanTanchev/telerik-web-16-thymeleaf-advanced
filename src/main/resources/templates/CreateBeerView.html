@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>BeerTag | AllBeers</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+</head>
+<body>
+<!-- The header and footer section are the same in each page -->
+<header>
+    <div th:replace="HeaderTemplate:: navigation-bar"></div>
+</header>
+
+<div>
+    <div th:replace="BeerForm:: beer-form(title)"></div>
+</div>
+
+<footer>
+    <small>©️ Copyright 2024, BeerTag</small>
+</footer>
+</body>
+</html>

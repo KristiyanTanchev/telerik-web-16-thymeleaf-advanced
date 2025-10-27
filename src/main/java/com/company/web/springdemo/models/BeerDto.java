@@ -1,8 +1,6 @@
 package com.company.web.springdemo.models;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 public class BeerDto {
 
@@ -11,6 +9,8 @@ public class BeerDto {
     private String name;
 
     @Positive(message = "ABV should be positive")
+    @Min(0)
+    @Max(value = 99, message = "ABV must be less than or equal to 99.")
     private double abv;
 
     @Positive(message = "StyleId should be positive")

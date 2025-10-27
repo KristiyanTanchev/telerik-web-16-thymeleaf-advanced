@@ -1,16 +1,24 @@
 package com.company.web.springdemo.controllers.mvc;
 
+import com.company.web.springdemo.exceptions.EntityDuplicateException;
 import com.company.web.springdemo.exceptions.EntityNotFoundException;
+import com.company.web.springdemo.helpers.BeerMapper;
 import com.company.web.springdemo.models.Beer;
+import com.company.web.springdemo.models.BeerDto;
+import com.company.web.springdemo.models.Style;
+import com.company.web.springdemo.models.User;
 import com.company.web.springdemo.services.BeerService;
+import com.company.web.springdemo.services.StyleService;
+import com.company.web.springdemo.services.UserService;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,26 +29,45 @@ public class BeerMvcController {
 
     private final BeerService beerService;
 
+    private final UserService userService;
+    private final StyleService styleService;
+    private final BeerMapper beerMapper;
+
+
     @Autowired
-    public BeerMvcController(BeerService beerService) {
+    public BeerMvcController(BeerService beerService,
+                             UserService userService,
+                             StyleService styleService,
+                             BeerMapper beerMapper) {
         this.beerService = beerService;
+        this.userService = userService;
+        this.styleService = styleService;
+        this.beerMapper = beerMapper;
+    }
+
+    @ModelAttribute("styles")
+    public List<Style> populateStyles(){
+        return styleService.get();
+    }
+
+    @ModelAttribute("requestURI")
+    public String populateRequestUri(final HttpServletRequest request){
+        return request.getRequestURI();
     }
 
     @GetMapping("/{id}")
     public String showBeer(Model model, @PathVariable int id){
         try {
             Beer beer = beerService.get(id);
-            List<Beer> beers = new ArrayList<>();
-            beers.add(beer);
             model.addAttribute("creatorEmail", beer.getCreatedBy().getEmail());
-            model.addAttribute("beers", beers);
+            model.addAttribute("beer", beer);
         }catch (EntityNotFoundException e){
             model.addAttribute("statusCode",
                     HttpStatus.NOT_FOUND.getReasonPhrase());
             return "ErrorView";
         }
 
-        return "BeersView";
+        return "SingleBeerView";
     }
 
     @GetMapping
@@ -57,5 +84,89 @@ public class BeerMvcController {
 
         return "BeersView";
     }
+
+    @GetMapping("/new")
+    public String createBeer(Model model){
+        model.addAttribute("beer", new BeerDto());
+        return "CreateBeerView";
+    }
+
+    @PostMapping("/new")
+    public String createBeer(@Valid @ModelAttribute("beer") BeerDto beerDto, BindingResult errors, Model model){
+        Beer beer = null;
+        if (errors.hasErrors()){
+            return "CreateBeerView";
+        }
+        try{
+            beer = beerMapper.fromDto(beerDto);
+        }catch (EntityNotFoundException e){
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
+
+        //TODO Get user
+        User user = userService.get(1);
+
+        try {
+            beerService.create(beer, user);
+            return "redirect:/beers";
+        }
+        catch (EntityDuplicateException e){
+            errors.rejectValue("name", "beer.exists", e.getMessage());
+            return "CreateBeerView";
+        }
+        catch (EntityNotFoundException e){
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
+    }
+
+    @GetMapping("/update/{id}")
+    public String updateBeer(Model model, @PathVariable int id){
+        Beer beer = beerService.get(id);
+        BeerDto beerDto = new BeerDto();
+        beerDto.setName(beer.getName());
+        beerDto.setAbv(beer.getAbv());
+        beerDto.setStyleId(beer.getStyle().getId());
+        model.addAttribute("beer", beerDto);
+        return "BeerUpdateView";
+    }
+
+
+    @PostMapping("/update/{id}")
+    public String updateBeer(@Valid @ModelAttribute("beer") BeerDto beerDto, BindingResult errors, Model model,
+                             @PathVariable int id){
+        Beer beer = null;
+        if (errors.hasErrors()){
+            return "CreateBeerView";
+        }
+        try{
+            beer = beerMapper.fromDto(beerDto);
+        }catch (EntityNotFoundException e){
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
+
+        //TODO Get user
+        User user = userService.get(1);
+
+        try {
+            beerService.update(beer, user);
+            return "redirect:/beers/" + id;
+        }
+        catch (EntityDuplicateException e){
+            errors.rejectValue("name", "beer.exists", e.getMessage());
+            return "BeerUpdateView";
+        }
+        catch (EntityNotFoundException e){
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
+    }
+
 
 }

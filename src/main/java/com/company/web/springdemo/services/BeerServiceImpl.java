@@ -50,6 +50,7 @@ public class BeerServiceImpl implements BeerService {
         repository.create(beer);
     }
 
+
     @Override
     public void update(Beer beer, User user) {
         checkModifyPermissions(beer.getId(), user);

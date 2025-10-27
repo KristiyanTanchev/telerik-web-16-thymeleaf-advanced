@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<body>
+    <div class="center" th:fragment="beer-form(title)">
+        <!-- @{/beers/new} -->
+        <form class="margin12" action="#" method="post" th:action="@{__${requestURI}__}" th:object="${beer}">
+            <label th:text="Name" class="form-label">Name</label>
+            <br/>
+            <input class="form-input" type="text" th:type="text" th:field="*{name}"/>
+            <br/>
+            <label class="label-error" th:errors="*{name}"/>
+            <br/>
+            <label th:text="ABV" class="form-label">ABV</label>
+            <br/>
+            <input class="form-input" type="text" th:type="text" th:field="*{abv}"/>
+            <br/>
+            <label class="label-error" th:errors="*{abv}"/>
+            <br/>
+            <label th:text="Style" class="form-label">Style</label>
+            <br/>
+            <select  class="form-input" th:field="*{styleId}">
+                <option
+                        th:each="style: ${styles}"
+                        th:value="${style.id}"
+                        th:text="${style.name}"
+                ></option>
+            </select>
+            <br/>
+            <label class="label-error" th:errors="*{styleId}"/>
+            <br/>
+            <button type="submit" class="btn-primary">Create</button>
+        </form>
+    </div>
+</body>
+</html>

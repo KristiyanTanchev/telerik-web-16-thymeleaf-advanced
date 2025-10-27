@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>BeerTag | AllBeers</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+</head>
+<body>
+<!-- The header and footer section are the same in each page -->
+<header>
+    <div th:replace="HeaderTemplate:: navigation-bar"></div>
+</header>
+
+<div>
+    <div th:with="
+     curSort=${param.sortBy},
+     curDir=${param.sortOrder},
+     nextDir=${#strings.equalsIgnoreCase(curDir,'asc') ? 'desc' : 'asc'}">
+        <!--        <div th:text="${curSort}"></div>-->
+        <!--        <div th:text="${curDir}"></div>-->
+        <!--        <div th:text="${nextDir}"></div>-->
+        <div>
+            <h2 class="center">Beer View</h2>
+            <div class="table">
+
+                <div class="header-cell">Name</div>
+
+                <div class="header-cell">ABV</div>
+
+                <div class="header-cell">Style</div>
+
+                <div class="header-cell">Creator</div>
+
+                <div class="header-cell">Update</div>
+            <div class="row">
+                <div class="cell">
+                    <a th:href="@{/beers/{id}(id=${beer.id})}" th:text="${beer.name}">Beer Name 1</a>
+                </div>
+                <div class="cell" th:text="${beer.abv} + '%'">5.0%</div>
+                <div class="cell" th:text="${beer.style.name}">IPA</div>
+                <div class="cell" th:text="${creatorEmail}">Creator email
+                </div>
+                <div class="cell">
+                    <a th:href="@{/beers/update/{id}(id=${beer.id})}" th:text="Update"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<footer>
+    <small>©️ Copyright 2024, BeerTag</small>
+</footer>
+</body>
+</html>
