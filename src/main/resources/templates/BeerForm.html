@@ -4,22 +4,23 @@
 <body>
     <div class="center" th:fragment="beer-form(title)">
         <!-- @{/beers/new} -->
+        <!--/*@thymesVar id="requestURI" type=""*/-->
         <form class="margin12" action="#" method="post" th:action="@{__${requestURI}__}" th:object="${beer}">
             <label th:text="Name" class="form-label">Name</label>
             <br/>
             <input class="form-input" type="text" th:type="text" th:field="*{name}"/>
             <br/>
-            <label class="label-error" th:errors="*{name}"/>
+            <label class="label-error" th:errors="*{name}"></label>
             <br/>
             <label th:text="ABV" class="form-label">ABV</label>
             <br/>
             <input class="form-input" type="text" th:type="text" th:field="*{abv}"/>
             <br/>
-            <label class="label-error" th:errors="*{abv}"/>
+            <label class="label-error" th:errors="*{abv}"></label>
             <br/>
             <label th:text="Style" class="form-label">Style</label>
             <br/>
-            <select  class="form-input" th:field="*{styleId}">
+            <select name="Style" class="form-input" th:field="*{styleId}">
                 <option
                         th:each="style: ${styles}"
                         th:value="${style.id}"
@@ -27,9 +28,10 @@
                 ></option>
             </select>
             <br/>
-            <label class="label-error" th:errors="*{styleId}"/>
+            <label class="label-error" th:errors="*{styleId}"></label>
             <br/>
-            <button type="submit" class="btn-primary">Create</button>
+            <!--/*@thymesVar id="buttonLabel" type=""*/-->
+            <button type="submit" class="btn-primary" th:text="${buttonLabel}">Create</button>
         </form>
     </div>
 </body>

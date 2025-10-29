@@ -148,6 +148,18 @@ public class BeerRepositoryImpl implements BeerRepository {
                 if (beer == null) {
                     throw new EntityNotFoundException("Beer", "id", String.valueOf(id));
                 }
+                // Remove this beer from all user wishlists
+                List<User> users = session.createQuery(
+                                "select u from User u join fetch u.wishlist w where w.id = :beerId",
+                                User.class)
+                        .setParameter("beerId", id)
+                        .getResultList();
+
+                for (User user : users) {
+                    user.getWishlist().remove(beer);
+                    session.merge(user);
+                }
+
                 session.remove(beer);
                 tx.commit();
             }catch (RuntimeException e) {
