@@ -2,6 +2,7 @@ package com.company.web.springdemo.helpers;
 
 import com.company.web.springdemo.models.User;
 import com.company.web.springdemo.models.UserDto;
+import com.company.web.springdemo.models.UserLoginDto;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,6 +16,13 @@ public class UserMapper {
         user.setEmail(userDto.getEmail());
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
+        user.setUsername(userDto.getUsername());
+        user.setPassword(userDto.getPassword());
+        return user;
+    }
+
+    public User fromDto(UserLoginDto userDto){
+        User user = new User();
         user.setUsername(userDto.getUsername());
         user.setPassword(userDto.getPassword());
         return user;

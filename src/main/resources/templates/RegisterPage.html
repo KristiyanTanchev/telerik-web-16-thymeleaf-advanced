@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>BeerTag | AllBeers</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+</head>
+<body>
+<!-- The header and footer section are the same in each page -->
+<header>
+    <div th:replace="HeaderTemplate:: navigation-bar"></div>
+</header>
+
+<div>
+    <form class="margin12" action="#" method="post" th:action="@{/auth/register}" th:object="${user}">
+        <label th:text="#{auth.username}" class="form-label">Username</label>
+        <br/>
+        <input class="form-input" type="text" th:type="text" th:field="*{username}"/>
+        <label class="label-error" th:errors="*{username}">Password error</label>
+        <br/>
+
+
+        <label th:text="#{auth.password}" class="form-label">Password</label>
+        <br/>
+        <input class="form-input" th:type="password" th:field="*{password}"/>
+        <label class="label-error" th:errors="*{password}">Password error</label>
+        <br/>
+
+
+        <label th:text="#{auth.passwordRepeat}" class="form-label">Repeat password</label>
+        <br/>
+        <input class="form-input" th:type="password" th:field="*{passwordConfirm}"/>
+        <label class="label-error" th:errors="*{passwordConfirm}">Password error</label>
+        <br/>
+
+        <label th:text="#{auth.firstname}" class="form-label">First name</label>
+        <br/>
+        <input class="form-input" th:type="text" th:field="*{firstName}"/>
+        <label class="label-error" th:errors="*{firstName}"></label>
+        <br/>
+
+        <label th:text="#{auth.lastName}" class="form-label">Last name</label>
+        <br/>
+        <input class="form-input" th:type="text" th:field="*{lastName}"/>
+        <label class="label-error" th:errors="*{lastName}"></label>
+        <br/>
+
+        <label th:text="#{auth.email}" class="form-label">Email</label>
+        <br/>
+        <input class="form-input" th:type="text" th:field="*{email}"/>
+        <label class="label-error" th:errors="*{email}"></label>
+        <br/>
+
+
+
+
+        <button type="submit" class="btn-primary" th:text="Register">Register</button>
+    </form>
+</div>
+
+
+
+<footer>
+    <small>©️ Copyright 2024, BeerTag</small>
+</footer>
+</body>
+</html>

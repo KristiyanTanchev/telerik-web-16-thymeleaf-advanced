@@ -3,17 +3,16 @@ package com.company.web.springdemo.helpers;
 import com.company.web.springdemo.exceptions.AuthorizationException;
 import com.company.web.springdemo.exceptions.EntityNotFoundException;
 import com.company.web.springdemo.models.User;
+import com.company.web.springdemo.models.UserLoginDto;
 import com.company.web.springdemo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.server.ResponseStatusException;
 
 @Component
 public class AuthenticationHelper {
     private static final String AUTHORIZATION_HEADER_NAME = "Authorization";
-    private static final String INVALID_AUTHENTICATION_ERROR = "Invalid authentication.";
+    private static final String INVALID_AUTHENTICATION_ERROR = "Invalid username or password.";
 
     private final UserService userService;
 
@@ -38,6 +37,20 @@ public class AuthenticationHelper {
             }
 
             return user;
+        } catch (EntityNotFoundException e) {
+            throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
+        }
+    }
+
+    public User tryGetUser(UserLoginDto user) {
+        try {
+            User userDb = userService.get(user.getUsername());
+
+            if (!userDb.getPassword().equals(user.getPassword())) {
+                throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
+            }
+
+            return userDb;
         } catch (EntityNotFoundException e) {
             throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
         }
