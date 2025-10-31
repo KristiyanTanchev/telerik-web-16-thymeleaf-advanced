@@ -9,7 +9,7 @@
 <body>
 <!-- The header and footer section are the same in each page -->
 <header>
-    <div th:replace="HeaderTemplate:: navigation-bar"></div>
+    <div th:replace="~{HeaderTemplate:: navigation-bar}"></div>
 </header>
 
 <div>
@@ -17,7 +17,7 @@
         <label th:text="#{auth.username}" class="form-label">Username</label>
         <br/>
         <input class="form-input" type="text" th:type="text" th:field="*{username}"/>
-        <label class="label-error" th:errors="*{username}">Password error</label>
+        <label class="label-error" th:errors="*{username}">Username error</label>
         <br/>
 
 

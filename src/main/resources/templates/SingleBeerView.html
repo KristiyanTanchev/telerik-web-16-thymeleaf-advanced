@@ -13,13 +13,6 @@
 </header>
 
 <div>
-    <div th:with="
-     curSort=${param.sortBy},
-     curDir=${param.sortOrder},
-     nextDir=${#strings.equalsIgnoreCase(curDir,'asc') ? 'desc' : 'asc'}">
-        <!--        <div th:text="${curSort}"></div>-->
-        <!--        <div th:text="${curDir}"></div>-->
-        <!--        <div th:text="${nextDir}"></div>-->
         <div>
             <h2 class="center">Beer View</h2>
             <div class="table">
@@ -50,10 +43,16 @@
                         <a th:href="@{/beers/delete/{id}(id=${beer.id})}" th:text="Delete"></a>
                     </div>
                 </div>
+<!--                <div class="cell">-->
+<!--                    <form th:action="@{/beers/{id}(id=${beer.id})}" method="post" onsubmit="return confirm('Delete this beer?');">-->
+<!--                        <input type="hidden" name="_method" value="delete"/>-->
+<!--                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
+<!--                        <button type="submit">Delete</button>-->
+<!--                    </form>-->
+<!--                </div>-->
             </div>
         </div>
     </div>
-</div>
 </div>
 
 <footer>
