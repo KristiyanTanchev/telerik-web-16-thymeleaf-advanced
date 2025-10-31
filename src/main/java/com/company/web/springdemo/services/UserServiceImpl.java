@@ -1,8 +1,6 @@
 package com.company.web.springdemo.services;
 
-import com.company.web.springdemo.exceptions.AuthorizationException;
-import com.company.web.springdemo.exceptions.EntityDuplicateException;
-import com.company.web.springdemo.exceptions.EntityNotFoundException;
+import com.company.web.springdemo.exceptions.*;
 import com.company.web.springdemo.models.Beer;
 import com.company.web.springdemo.models.User;
 import com.company.web.springdemo.repositories.BeerRepository;
@@ -100,14 +98,14 @@ public class UserServiceImpl implements UserService {
     private void validateUniqueEmail(User user){
         try {
             userRepository.getByEmail(user.getEmail());
-            throw new EntityDuplicateException("User", "email", user.getEmail());
+            throw new EmailDuplicateException(user.getEmail());
         } catch (EntityNotFoundException ignored){ }
     }
 
     private void validateUniqueUsername(User user){
         try {
             userRepository.getByUsername(user.getUsername());
-            throw new EntityDuplicateException("User", "username", user.getUsername());
+            throw new UsernameDuplicateException(user.getUsername());
         } catch (EntityNotFoundException ignored) { }
     }
 
@@ -115,7 +113,7 @@ public class UserServiceImpl implements UserService {
         try {
             User testUser = userRepository.getByEmail(user.getEmail());
             if (testUser.getId() != excludeId){
-                throw new EntityDuplicateException("User", "email", user.getEmail());
+                throw new EmailDuplicateException(user.getEmail());
             }
         } catch (EntityNotFoundException ignored){ }
     }
@@ -124,7 +122,7 @@ public class UserServiceImpl implements UserService {
         try {
             User testUser = userRepository.getByUsername(user.getUsername());
             if (testUser.getId() != excludeId){
-                throw new EntityDuplicateException("User", "username", user.getUsername());
+                throw new UsernameDuplicateException(user.getUsername());
             }
         } catch (EntityNotFoundException ignored) { }
     }

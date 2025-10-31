@@ -1,6 +1,9 @@
 package com.company.web.springdemo.controllers.mvc;
 
 import com.company.web.springdemo.exceptions.AuthorizationException;
+import com.company.web.springdemo.exceptions.EmailDuplicateException;
+import com.company.web.springdemo.exceptions.EntityDuplicateException;
+import com.company.web.springdemo.exceptions.UsernameDuplicateException;
 import com.company.web.springdemo.helpers.AuthenticationHelper;
 import com.company.web.springdemo.helpers.UserMapper;
 import com.company.web.springdemo.models.User;
@@ -74,10 +77,20 @@ public class AuthenticationMvcController {
     }
 
     @PostMapping("/register")
-    public String handleRegister(@Valid @ModelAttribute("user") UserDto user,
+    public String handleRegister(@Valid @ModelAttribute("user") UserDto userDto,
                                  BindingResult errors,
                                  HttpSession session) {
         if (errors.hasErrors()) {
+            return "RegisterPage";
+        }
+        try{
+            User user = userMapper.fromDto(userDto);
+            userService.create(user);
+        }catch (UsernameDuplicateException e){
+            errors.rejectValue("username", "username.taken", e.getMessage());
+            return "RegisterPage";
+        }catch (EmailDuplicateException e) {
+            errors.rejectValue("email", "email.taken", e.getMessage());
             return "RegisterPage";
         }
         return "redirect:/";
